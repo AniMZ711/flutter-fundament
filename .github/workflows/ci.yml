@@ -1,0 +1,36 @@
+name: CI
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.4
+          channel: stable
+
+      - run: flutter pub get
+
+      - run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - run: dart format --output=none --set-exit-if-changed .
+
+      - run: flutter analyze
+
+      - name: Cache pub-cache for import_lint
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-import_lint-2.0.0
+
+      - run: dart pub global activate import_lint 2.0.0
+
+      - run: dart pub global run import_lint
+
+      - run: flutter test
+
+      - run: flutter build apk --flavor dev --debug --target=lib/main_dev.dart

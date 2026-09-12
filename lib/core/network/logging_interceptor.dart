@@ -31,10 +31,9 @@ class LoggingInterceptor extends Interceptor {
 
   void _log(RequestOptions options, int? statusCode) {
     final start = _requestStartTimes.remove(options);
-    final elapsedMs =
-        start == null
-            ? '?'
-            : DateTime.now().difference(start).inMilliseconds.toString();
+    final elapsedMs = start == null
+        ? '?'
+        : DateTime.now().difference(start).inMilliseconds.toString();
     developer.log(
       '${options.method} ${options.uri} -> $statusCode (${elapsedMs}ms)',
       name: 'Dio',
