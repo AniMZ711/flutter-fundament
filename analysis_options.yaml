@@ -1,0 +1,35 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+
+# import_lint (https://pub.dev/packages/import_lint) enforces the Clean
+# Architecture layer boundaries. Run via a globally activated CLI
+# (`dart pub global activate import_lint`), not as a project dependency:
+# its latest release requires an `analyzer` version incompatible with
+# `freezed`'s, so it must resolve in its own isolated package graph.
+# Run with: dart pub global run import_lint
+import_lint:
+  severity: error
+  rules:
+    presentation_must_not_import_data:
+      target: "package:flutter_fundament/features/**/presentation/**"
+      from: "package:flutter_fundament/features/**/data/**"
+      except: []
+    domain_must_not_import_data:
+      target: "package:flutter_fundament/features/**/domain/**"
+      from: "package:flutter_fundament/features/**/data/**"
+      except: []
+    domain_must_not_import_presentation:
+      target: "package:flutter_fundament/features/**/domain/**"
+      from: "package:flutter_fundament/features/**/presentation/**"
+      except: []
+    data_must_not_import_presentation:
+      target: "package:flutter_fundament/features/**/data/**"
+      from: "package:flutter_fundament/features/**/presentation/**"
+      except: []
